@@ -1,0 +1,9 @@
+title: "TypeScriptでfunctionalで型安全性なAPIサーバーを作る"
+summary: "関数型プログラミングのパラダイムを生かして一気通貫で型安全なバックエンドAPIを作成する"
+topics: ["fp", "TypeScript"]
+published: false
+price: 0 # 有料の場合200〜5000
+# 本に含めるチャプターを順番に並べましょう
+chapters:
+  - example1
+  - example2
