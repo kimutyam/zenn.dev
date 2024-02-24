@@ -16,19 +16,18 @@ published: false
 - (応用) NestJSと組み合わせる
 
 
-## test
+## はじめに
 
-TypeScriptで型安全性を実現する過程で`fp-ts`の派生ライブラリである`newtype-ts`を発見しました。TypeScriptの型システムは構造的部分型(Structural Subtyping)ですが、`newtype-ts` を利用すると簡易に公称型(NewType)を手に入れることができます。さらに`newtype-ts` の `Prism` を使うことで公称型に型制約を設け、制約違反なインスタンス化ができないようにすることもできます。これは契約プログラミングでいうところの不変条件として扱えます。詳しくは以下の記事で紹介していますが、本稿では必須の知識になります。
+TypeScriptで型安全性を実現する過程で`fp-ts`の派生ライブラリである`newtype-ts`を発見しました。
+TypeScriptの型システムは構造的部分型(Structural Subtyping)ですが、`newtype-ts` を利用すると簡易に公称型(NewType)を手に入れられます。
+さらに`newtype-ts`の`Prism`を使うことで公称型に型制約を設け、制約違反なインスタンスを生成できないように制御ができます。
+詳しくは以下の記事で紹介していますが、本稿では必須の知識になります。
 
 https://kimutyam.medium.com/newtype-ts-iso-prism-15b65414889d
 
-さて、システム外部から受け取った値(以降、外部値とする)をバリデーションしNewTypeに変換することを想像してみましょう。この時にいくつかの問題にぶち当たります。その問題を解消するためにzodを導入し、zodスキーマからNewTypeに変換するアプローチを紹介します。(粗目)
+## 前提
 
---
-
-1. 外部値を`Prism#getOption` に入力してみましょう。
-
-:::details タイトル
+ユーザーアカウントの登録
 
 ```typescript
 import type { Newtype } from 'newtype-ts';
@@ -50,6 +49,30 @@ export const UserName = {
   prism: prism<UserName>((name) => name.length >= 4),
 } as const;
 ```
+
+```typescript
+import { UserId } from './userId';
+import { UserName } from './userName';
+
+export type User = Readonly<{
+  id: UserId;
+  name: UserName;
+}>;
+```
+
+
+さて、システム外部から受け取った値(以降、外部値とする)をバリデーションしNewTypeに変換することを想像してみましょう。
+この時にいくつかの問題にぶち当たります。その問題を解消するためにzodを導入し、zodスキーマからNewTypeに変換するアプローチを紹介します。(粗目)
+
+
+
+
+--
+
+1. 外部値を`Prism#getOption` に入力してみましょう。
+
+:::details タイトル
+
 
 ```typescript
 import * as AP from 'fp-ts/Apply';
