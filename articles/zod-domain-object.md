@@ -2,7 +2,7 @@
 title: "Zodでロバストなドメインオブジェクトを定義する"
 emoji: "🐳"
 type: "tech"
-topics: ["TypeScript", "Zod", "neverthrow", "DDD"]
+topics: ["TypeScript", "Zod", "NeverThrow", "DDD"]
 published: true
 published_at: 2024-02-26 10:00
 ---
@@ -370,20 +370,20 @@ Result型は成否の判別可能な抽象型です。TypeScriptはResult型を�
 
 ライブラリは筆者の観測範囲だと次の選択肢が有力な候補です。:
 
-- [neverthrow](https://github.com/supermacro/neverthrow)
+- [NeverThrow](https://github.com/supermacro/neverthrow)
 - [fp-ts](https://github.com/gcanti/fp-ts)
 - [option-t](https://github.com/option-t/option-t)
 
-Result型をサポートするライブラリの比較やそれぞれの利用方法は他でも多く語られているため割愛します。今回はneverthrowを利用してドメインロジックを組み立てます。(私はoption-tをプロダクションコードで利用したことがないため、fp-tsとneverthrowを比較したうえで関数型の知識を多く求めないneverthrowで説明します。)
+Result型をサポートするライブラリの比較やそれぞれの利用方法は他でも多く語られているため割愛します。今回はNeverThrowを利用してドメインロジックを組み立てます。(私はoption-tをプロダクションコードで利用したことがないため、fp-tsとNeverThrowを比較したうえで関数型の知識を多く求めないNeverThrowで説明します。)
 
-先程定義した `OrderQuantity` の `safeBuild` メソッドの戻り値を、neverthrowのResult型になるように変更をします。
+先程定義した `OrderQuantity` の `safeBuild` メソッドの戻り値を、NeverThrowのResult型になるように変更をします。
 
 ```typescript
 const safeBuild = (input: OrderQuantityInput): Result<OrderQuantity, z.ZodError<OrderQuantityInput>> =>
   buildFromZodDefault(schema.safeParse(input));
 ```
 
-`buildFromZodDefault` は、Zodの `SafeParseReturnType` 型から、neverthrowの `Result` に変換するユーティリティメソッドとして定義したものです。実際は次のように定義しています。
+`buildFromZodDefault` は、Zodの `SafeParseReturnType` 型から、NeverThrowの `Result` に変換するユーティリティメソッドとして定義したものです。実際は次のように定義しています。
 
 ```typescript
 import type { Result } from 'neverthrow';
@@ -401,8 +401,8 @@ export const buildFromZodDefault = <Input, Output>(
 ): Result<Output, z.ZodError<Input>> => buildFromZod(result, identity);
 ```
 
-- buildFromZod: Zodの`SafeParseReturnType` が成功の場合はneverthrowのOk型に、失敗の場合は、neverthrowのErr型に変換します。Err型に含める具体的なエラーオブジェクトをZodErrorから変換するための関数fを引数に持ちます。
-- buildFromZodDefault: Err型に含める具体的なエラーオブジェクトをZodErrorのままに戻します。他はbuildFromZodと同じです。実装の便宜上、remedajsの[identityメソッド](https://remedajs.com/docs/#identity)を使っています。
+- buildFromZod: Zodの`SafeParseReturnType` が成功の場合はNeverThrowのOk型に、失敗の場合は、NeverThrowのErr型に変換します。Err型に含める具体的なエラーオブジェクトをZodErrorから変換するための関数fを引数に持ちます。
+- buildFromZodDefault: Err型に含める具体的なエラーオブジェクトをZodErrorのままに戻します。他はbuildFromZodと同じです。実装の便宜上、Remedaの[identityメソッド](https://remedajs.com/docs/#identity)を使っています。
 
 続いて、`OrderQuantity` の `add` メソッドの戻り値もResultになるように修正します。
 
@@ -511,7 +511,7 @@ it('構造の異なる入力値から注文項目を組み立てる', () => {
 });
 ```
 
-本編と関係ないですが、OrderItemに変換する処理フローを簡潔に記述するために、[remedajsのpipe関数](https://remedajs.com/docs/#pipe)を利用しています。
+本編と関係ないですが、OrderItemに変換する処理フローを簡潔に記述するために、[Remedaのpipe関数](https://remedajs.com/docs/#pipe)を利用しています。
 
 
 # 最後に
