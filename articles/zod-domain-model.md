@@ -328,11 +328,14 @@ export const OrderQuantity = {
 - calculateTotal: 合計金額を計算する
 
 ```typescript
-const schema = z.object({
-  quantity: OrderQuantity.schema,
-  // NOTE: OrderQuantity.schemaと類似した定義になるため割愛
-  product: Product.schema,
-});
+
+const schema = z
+    .object({
+        quantity: OrderQuantity.schema,
+        // NOTE: OrderQuantity.schemaと類似した定義になるため割愛
+        product: Product.schema,
+    })
+    .readonly();
 
 export type OrderItem = z.infer<typeof schema>;
 
@@ -359,7 +362,8 @@ export const OrderItem = {
 ```
 
 `buildSingle` メソッドでは、`OrderQuantity.build` メソッドを利用しています。ここでは外のコンテキスト、つまり入力値等には関係なく、数量が1つであると決められたルールに基づいてファクトリを実装しています。「数量」の不変条件違反になった場合はバグとしてみなすため、`OrderQuantity.build` を利用します。  
-`add` メソッドでは、`OrderQuantity.safeBuild` メソッドを利用しています。ここで `build` メソッドを使うか、`safeBuild` を使うかはビジネスルールやユースケースにも寄りますが、ここでは外部入力によって追加する数量を外部入力するユースケースを想定して、エラーハンドリングに開かれた戻り値にする設計の選択をしています。戻り値は、`OrderItem | z.ZodError<OrderQuantityInput>` になっていますが、必要に応じて、カスタムエラー型に変換する実装にしてもいいでしょう。このままだと、Union型の判別は `add` メソッドを使うクライアントに委ねることになりますが、判別可能な共用型でないとロバストに判別ができません。Zodの`safeParse`メソッドの戻り値である `SafeParseReturnType` 自体は判別可能なUnion型ですが、それを判別して関数を適用して再度 `SafeParseReturnType` 型に入れるような処理ができるメソッドがないため、無策に利用していると、例のようにUnion型で取り扱うことになります。これを解決するために次項でResult型を紹介します。
+`add` メソッドでは、`OrderQuantity.safeBuild` メソッドを利用しています。ここで `build` メソッドを使うか、`safeBuild` を使うかはビジネスルールやユースケースにも寄りますが、ここでは外部入力によって追加する数量を外部入力するユースケースを想定して、エラーハンドリングに開かれた戻り値にする設計の選択をしています。戻り値は、`OrderItem | z.ZodError<OrderQuantityInput>` になっていますが、必要に応じて、カスタムエラー型に変換する実装にしてもいいでしょう。ただ、このままだと、Union型の判別は `add` メソッドを使うクライアントに委ねることになりますが、判別可能な共用型でないとロバストに判別ができません。Zodの`safeParse`メソッドの戻り値である `SafeParseReturnType` 自体は判別可能なUnion型ですが、それを判別して関数を適用して再度 `SafeParseReturnType` 型に入れるような処理ができるメソッドがないため、無策に利用していると、例のようにUnion型で取り扱うことになります。これを解決するために次項でResult型を紹介します。
+徒然とメソッド内部の実装の説明をしましたが、その他のテクニックとして「注文項目」のオブジェクトをイミュータブルに扱うために、[readonly](https://zod.dev/?id=readonly)メソッドを利用します、これにより推論される型にreadonly修飾子がつき、例えば数量の追加は`add`メソッド経由で行うように強制させられる効用があります。
 
 ## パースエラーはResult型にWrapする
 
@@ -424,11 +428,13 @@ const add =
 先程定義した `OrderItem.schema` を利用してドメインオブジェクトを生成するサンプルをテストコードで示します。思い出すために、簡略化した`OrderItem.schema`のコードを再掲します。
 
 ```typescript
-const schema = z.object({
-  quantity: OrderQuantity.schema,
-  // NOTE: OrderQuantity.schemaと類似した定義になるため割愛
-  product: Product.schema,
-});
+const schema = z
+    .object({
+        quantity: OrderQuantity.schema,
+        // NOTE: OrderQuantity.schemaと類似した定義になるため割愛
+        product: Product.schema,
+    })
+    .readonly();
 
 /** 略 */
 
@@ -465,11 +471,13 @@ it('注文項目をパースする', () => {
 
 ```typescript
 // 価格が存在しない
-const schema = z.object({
-  id: ProductId.schema,
-  // 値オブジェクトの制約よりも強い入力制限をするユースケースを想定
-  quantity: z.number().int().min(1).max(2),
-});
+const schema = z
+    .object({
+        id: ProductId.schema,
+        // 値オブジェクトの制約よりも強い入力制限をするユースケースを想定
+        quantity: z.number().int().min(1).max(2),
+    })
+    .readonly();
 ```
 
 この場合は、上記スキーマをDTO(Data Transfer Object)のそれと見立て、変換用の関数を用意します。
