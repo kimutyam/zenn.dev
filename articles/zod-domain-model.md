@@ -535,3 +535,4 @@ it('構造の異なる入力値から注文項目を組み立てる', () => {
 - [さらなる型安全性を求めて ~ Refinement TypeをScalaで実現する ~](https://engineering.visional.inc/blog/168/scala-refined-newtype/)
 - [公称型をTypeScriptで実現するための基礎](https://qiita.com/suin/items/ae9ed911ebab48c98835)
 - [TypeScript の Type Branding をより便利に活用する方法のまとめ](https://zenn.dev/noshiro_piko/articles/typescript-branded-type-int)
+- [Always-Valid Domain Model](https://enterprisecraftsmanship.com/posts/always-valid-domain-model/)
