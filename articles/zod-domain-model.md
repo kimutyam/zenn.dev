@@ -21,10 +21,10 @@ Branded Typesを導入すると、事実上ファクトリを経由すること�
 :::message
 この記事のサンプルコードは次のライブラリのバージョンを前提としています。
 
-- Zod: 3.22.4
+- Zod: 3.23.8
 - Jest: 29.7.0
-- neverthrow: 6.1.0
-- remeda: 1.26.0
+- neverthrow: 6.2.2
+- remeda: 2.0.9
 :::
 
 # 導入
@@ -403,7 +403,7 @@ export const buildFromZod = <Input, Output, E = z.ZodError<Input>>(
 
 export const buildFromZodDefault = <Input, Output>(
   result: z.SafeParseReturnType<Input, Output>,
-): Result<Output, z.ZodError<Input>> => buildFromZod(result, identity);
+): Result<Output, z.ZodError<Input>> => buildFromZod(result, identity());
 ```
 
 - buildFromZod: Zodの`SafeParseReturnType` が成功の場合はNeverThrowのOk型に、失敗の場合は、NeverThrowのErr型に変換します。Err型に含める具体的なエラーオブジェクトをZodErrorから変換するための関数fを引数に持ちます。
