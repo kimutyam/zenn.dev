@@ -149,7 +149,7 @@ describe('safeParse', () => {
 ## Refinements
 
 RefinementsはRefinement TypesのTypesを抜いた概念として取り上げています。  
-Refiement Typesは値の制約を型で表現する方法です。冒頭の課題意識で紹介した「数量」に関する「自然数」「上限付き」といった制約を型レベルで表現することで、コンパイラが検査できるようになります。他言語では、Nikita Volkov氏によるRefinement TypesのHaskellライブラリである[refined](https://github.com/nikita-volkov/refined)や、それの移植が動機で開発されたScala版の[refined](https://github.com/fthomas/refined)のような高いシェアのライブラリが存在しますが、TypeScriptでそれらしきライブラリの存在を認知できていません。また、[refinement types #7599](https://github.com/microsoft/TypeScript/issues/7599)でTypeScriptでのRefinement Typesが提案されていますが、現時点では動きが見られません。
+Refinement Typesは値の制約を型で表現する方法です。冒頭の課題意識で紹介した「数量」に関する「自然数」「上限付き」といった制約を型レベルで表現することで、コンパイラが検査できるようになります。他言語では、Nikita Volkov氏によるRefinement TypesのHaskellライブラリである[refined](https://github.com/nikita-volkov/refined)や、それの移植が動機で開発されたScala版の[refined](https://github.com/fthomas/refined)のような高いシェアのライブラリが存在しますが、TypeScriptでそれらしきライブラリの存在を認知できていません。また、[refinement types #7599](https://github.com/microsoft/TypeScript/issues/7599)でTypeScriptでのRefinement Typesが提案されていますが、現時点では動きが見られません。
 
 Zodの[refine](https://zod.dev/?id=refine)メソッドのリファレンスではRefinement TypesはTypeScriptの型システムでは実現できないとしたうえで、Zodスキーマにバリデーションチェックを定義してRefinementsを実現する旨が説明されています。
 
