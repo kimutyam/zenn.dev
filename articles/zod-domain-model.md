@@ -409,7 +409,7 @@ export const buildFromZodDefault = <Input, Output>(
 - buildFromZod: Zodの`SafeParseReturnType` が成功の場合はNeverThrowのOk型に、失敗の場合は、NeverThrowのErr型に変換します。Err型に含める具体的なエラーオブジェクトをZodErrorから変換するための関数fを引数に持ちます。
 - buildFromZodDefault: Err型に含める具体的なエラーオブジェクトをZodErrorのままに戻します。他はbuildFromZodと同じです。実装の便宜上、Remedaの[identityメソッド](https://remedajs.com/docs/#identity)を使っています。
 
-続いて、`OrderQuantity` の `add` メソッドの戻り値もResultになるように修正します。
+続いて、`OrderItem` の `add` メソッドの戻り値もResultになるように修正します。
 
 ```typescript
 const add =
