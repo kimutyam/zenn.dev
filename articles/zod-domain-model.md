@@ -515,7 +515,7 @@ it('構造の異なる入力値から注文項目を組み立てる', () => {
 
   const orderItem: OrderItem = R.pipe(result.data, OrderQuantityDto.toOrderItem(Price.build(100)));
   expect(orderItem.product.id).toBe('8456C9A7-5135-4067-913A-378ED93A1DAC');
-  expect(orderItem.product.price).toBe(1_00);
+  expect(orderItem.product.price).toBe(100);
   expect(orderItem.quantity).toBe(1);
 });
 ```
