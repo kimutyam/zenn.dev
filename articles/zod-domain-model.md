@@ -237,7 +237,7 @@ export const productSchema = z.object({
 
 ```typescript
 const sortedStringSchema = z.string().refine(
-  (arg) => [...arg].sort().join('') === arg,
+  (arg) => Array.from(arg).sort().join('') === arg,
   (arg) => ({ message: `ソートされていません: ${arg}` }),
 );
 ```
